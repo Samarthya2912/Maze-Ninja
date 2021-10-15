@@ -1,1 +1,1 @@
-<h1>DS Program and Discrete Mathematics Project</h1>
+<h1>DS and Discrete Mathematics Project</h1>
