@@ -24,6 +24,13 @@ class Graph {
         this.weightArray[i].push(1);
       }
     }
+
+    /* testing walls */
+    // for(let i = 0; i < rows; i++) this.weightArray[i][5] = Infinity;
+  }
+
+  hashIt(i, j) {
+    return `cell_${i}_${j}`;
   }
 
   isValid(i, j) {
@@ -37,15 +44,32 @@ class Graph {
     }
   }
 
-  dfs(start, end) {
-    
+  dfs_helper(start_i, start_j, visited_cells) {
+    const d = [[1,0],[-1,0],[0,1],[0,-1]];
+    visited_cells.push(this.hashIt(start_i, start_j));
+  
+    d.forEach(d_ => {
+      let next_cell_i = start_i + d_[0]; 
+      let next_cell_j = start_j + d_[1];
+      if(!visited_cells.includes(this.hashIt(next_cell_i, next_cell_j)) && this.isValid(next_cell_i,next_cell_j) && this.weightArray[next_cell_i][next_cell_j] !== Infinity) {
+        this.dfs_helper(next_cell_i, next_cell_j, visited_cells);
+      }
+    })
+  }
+
+  dfs(start_i, start_j, end_i, end_j) {
+    const visited_cells = [];
+    const path = []; 
+    this.dfs_helper(start_i, start_j, visited_cells);
+    return visited_cells;
+    // console.log(visited_cells);
   }
 };
 
 
 function App() {
-  const mygraph = new Graph(25, 50);
-  const traversal_speed = 300;
+  const mygraph = new Graph(15, 30);
+  const traversal_speed = 10;
 
   let isMouseDown = false;
 
@@ -67,14 +91,14 @@ function App() {
     isMouseDown = true;
   }
 
-  const traverse = (traversal_array) => { // [i, j]
+  const traverse = (traversal_array, color) => { // [i, j]
     let i = 0;
 
     const interval = setInterval(() => {
       if(i === traversal_array.length) {
         clearInterval(interval);
       } else {
-        document.getElementById(`cell_${traversal_array[i][0]}_${traversal_array[i][1]}`).style.backgroundColor = "yellow";
+        document.getElementById(traversal_array[i]).style.backgroundColor = color;
         i++;
       }
     }, traversal_speed);
@@ -92,11 +116,20 @@ function App() {
     }
   }
 
-  useEffect(() => {
-    
-  }, [])
+  // useEffect(() => {
+  //   let traversal_array = mygraph.dfs(2,2);
+  //   console.log(traversal_array);
+  //   traverse(traversal_array, 'pink');
+  // }, [])
+
+  function start_traversal() {
+    let traversal_array = mygraph.dfs(2,2);
+    console.log(traversal_array);
+    traverse(traversal_array, 'pink');
+  }
 
   return (
+    <>
     <div className="App">
       {
         mygraph.weightArray.map((row, row_index) => {
@@ -110,8 +143,7 @@ function App() {
                   onMouseDown={() => { cellMouseDownHandler(row_index, column_index)} }
                   onMouseUp={() => { cellMouseUpHandler(row_index, column_index) }}
                   onMouseEnter={() => { cellMouseEnterHandler(row_index, column_index) }}
-                  >
-          
+                  >  
                   </div>
                 })
               }
@@ -119,7 +151,9 @@ function App() {
           )
         })
       }
+    <button onClick={ start_traversal }>Start traversal</button>
     </div>
+    </>
   );
 }
 
