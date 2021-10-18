@@ -7,7 +7,8 @@ class Cell {
   constructor(i, j) {
     this.i = i;
     this.j = j;
-    this.weight = Infinity;
+    this.weight = 1;
+    this.isWall = false;
   }
 };
 
@@ -25,23 +26,31 @@ class Graph {
     }
   }
 
+  isValid(i, j) {
+    return (i >= 0) && (i < this.rows) && (j >= 0) && (j < this.columns);
+  }
+
   display() {
     this.weightArray[5][5] = 44;
     for (let i = 0; i < this.rows; i++) {
       console.log(this.weightArray[i]);
     }
   }
+
+  dfs(start, end) {
+    
+  }
 };
 
 
 function App() {
-  const mygraph = new Graph(20, 20);
+  const mygraph = new Graph(25, 50);
   const traversal_speed = 300;
 
   let isMouseDown = false;
 
   const cellClickHandler = (i, j) => {
-
+    // not required
   }
   
   const cellMouseDownHandler = (i, j) => {
@@ -84,8 +93,7 @@ function App() {
   }
 
   useEffect(() => {
-    const traversal_array = [[0,0],[1,2],[3,4]]
-    traverse(traversal_array);
+    
   }, [])
 
   return (
