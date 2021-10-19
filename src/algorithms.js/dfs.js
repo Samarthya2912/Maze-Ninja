@@ -67,6 +67,20 @@ class Graph {
 
         return false;
     }
+
+    getNeighbors(cell_id) {
+        let neighbors = [];
+
+        const [x_, y_] = cell_id.split('_');
+        const i = parseInt(x_);
+        const j = parseInt(y_);
+
+        // if(this.cell_array[i] && this.ce)
+    }
+
+    bfs() {
+
+    }
 };
 
 
