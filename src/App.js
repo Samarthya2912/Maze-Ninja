@@ -2,73 +2,29 @@
 /* eslint-disable no-unused-vars */
 import { useEffect } from 'react';
 import './App.css';
-import Graph from './algorithms.js/dfs';
-
-// class Cell {
-//   constructor(i, j) {
-//     this.i = i;
-//     this.j = j;
-//     this.weight = 1;
-//     this.isWall = false;
-//   }
-// };
-
-// class Graph {
-//   constructor(rows, columns) {
-//     this.rows = rows;
-//     this.columns = columns;
-//     this.weightArray = [];
-
-//     for (let i = 0; i < rows; i++) {
-//       this.weightArray.push([]);
-//       for (let j = 0; j < columns; j++) {
-//         this.weightArray[i].push(1);
-//       }
-//     }
-//   }
-
-//   isValid(i, j) {
-//     return (i >= 0) && (i < this.rows) && (j >= 0) && (j < this.columns);
-//   }
-
-//   display() {
-//     this.weightArray[5][5] = 44;
-//     for (let i = 0; i < this.rows; i++) {
-//       console.log(this.weightArray[i]);
-//     }
-//   }
-
-//   dfs(start, end) {
-    
-//   }
-// };
-
+import Graph from './algorithms.js/bfs';
 
 function App() {
   const mygraph = new Graph(25, 50);
-  const traversal_speed = 30;
+  const traversal_speed = 5;
+
+  let start_id = '12_10';
+  let end_id = '17_20';
 
   let isMouseDown = false;
-  
+
   const cellMouseDownHandler = (i, j) => {
-       document.getElementById(`${i}_${j}`).style.backgroundColor = "black";
-       mygraph.setWall(mygraph.cellId(i, j));
-      //  mygraph.display();
-  
-    // else {
-    //  document.getElementById(`cell_${i}_${j}`).style.backgroundColor = "white";
-    //  mygraph.weightArray[i][j] = 1;
-    //  mygraph.display();
-    // }
+    document.getElementById(`${i}_${j}`).style.backgroundColor = "black";
+    mygraph.setWall(mygraph.cellId(i, j));
 
     isMouseDown = true;
   }
 
-  const traverse = (traversal_array, color) => { // [i, j]
+  const traverse = (traversal_array, color) => { // Array of cell ids
     let i = 0;
 
     const interval = setInterval(() => {
-      if(i === traversal_array.length) {
+      if (i === traversal_array.length) {
         clearInterval(interval);
       } else {
         document.getElementById(traversal_array[i]).style.backgroundColor = color;
@@ -82,22 +38,34 @@ function App() {
   }
 
   const cellMouseEnterHandler = (i, j) => {
-    if(isMouseDown) {
+    if (isMouseDown) {
       document.getElementById(`${i}_${j}`).style.backgroundColor = "black";
       mygraph.setWall(mygraph.cellId(i, j));
-      // mygraph.display();
     }
   }
 
-  // useEffect(() => {
-    
-  // }, [])
+  useEffect(() => {
+    mark_ends();
+  }, [])
+
+  const mark_ends = () => {
+    document.getElementById(start_id).innerHTML = '<i class="bi bi-asterisk"></i>'
+    document.getElementById(end_id).innerHTML = '<i class="bi bi-slash-circle"></i>'
+  }
+
+  // const simulate = () => {
+  //   const { visited_arr, path } = mygraph.dfs(start_id, end_id);
+  //   traverse(visited_arr, 'yellow');
+  //   setTimeout(() => {
+  //     traverse(path, 'green')
+  //   }, visited_arr.length * traversal_speed + 100);
+  // }
 
   const simulate = () => {
-    const {visited_arr, path} = mygraph.dfs("0_0", "5_5");
+    const { visited_arr, path } = mygraph.bfs(start_id, end_id);
     traverse(visited_arr, 'yellow');
     setTimeout(() => {
-      traverse(path, 'green')
+      traverse(path, 'dodgerblue')
     }, visited_arr.length * traversal_speed + 100);
   }
 
@@ -109,14 +77,14 @@ function App() {
             <div className="row" key={row_index}>
               {
                 row.map((cell, column_index) => {
-                  return <div className="cell" id={`${row_index}_${column_index}`} 
-                  key={column_index} 
-                  // onClick={() => cellClickHandler(row_index, column_index)} 
-                  onMouseDown={() => { cellMouseDownHandler(row_index, column_index)} }
-                  onMouseUp={() => { cellMouseUpHandler(row_index, column_index) }}
-                  onMouseEnter={() => { cellMouseEnterHandler(row_index, column_index) }}
+                  return <div className="cell" id={`${row_index}_${column_index}`}
+                    key={column_index}
+                    // onClick={() => cellClickHandler(row_index, column_index)} 
+                    onMouseDown={() => { cellMouseDownHandler(row_index, column_index) }}
+                    onMouseUp={() => { cellMouseUpHandler(row_index, column_index) }}
+                    onMouseEnter={() => { cellMouseEnterHandler(row_index, column_index) }}
                   >
-          
+
                   </div>
                 })
               }

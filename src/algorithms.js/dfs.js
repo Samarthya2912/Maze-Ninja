@@ -17,6 +17,13 @@ class Graph {
         return `${i}_${j}`;
     }
 
+    getCellCoordinates(cell_id) {
+        const i_j = cell_id.split('_');
+        const i = parseInt(i_j[0]);
+        const j = parseInt(i_j[1]);
+        return [i,j];
+    }
+
     setWall(cell_id) {
         const i_j = cell_id.split('_');
         const i = parseInt(i_j[0]);
@@ -67,26 +74,29 @@ class Graph {
 
         return false;
     }
-
-    getNeighbors(cell_id) {
-        let neighbors = [];
-
-        const [x_, y_] = cell_id.split('_');
-        const i = parseInt(x_);
-        const j = parseInt(y_);
-
-        // if(this.cell_array[i] && this.ce)
-    }
-
-    bfs() {
-
-    }
 };
 
+Graph.prototype.getNeighbours = function(node_id) {
+    const [i, j] = this.getCellCoordinates(node_id);
+    const d = [[1,0],[-1,0],[0,1],[0,-1]];
+    const neighbours = [];
 
-const g = new Graph(5,5);
-g.setWall("4_1");
-const visited_Arr = g.dfs("0_0", "2_1");
-console.log(visited_Arr);
+    d.forEach(d_ => {
+        let i_ = i + d_[0];
+        let j_ = j + d_[1];
+
+        if(i_ >= 0 && i_ < this.rows && j_ >= 0 && j_ < this.columns) neighbours.push(`${i_}_${j_}`);
+    })
+
+    return neighbours; 
+}
+
+Graph.prototype.bfs = function(start_id, end_id) {
+    const visited_arr = [];
+    const path = [];
+
+
+}
+
 
 export default Graph;
